@@ -1,0 +1,158 @@
+---
+title: "<%= curCellLine %> Pharmacogenomics Data"
+params: 
+  curCellLine: "<%= curCellLine %>"
+  mainDataset: "<%= mainDataset %>"
+  chunkPlotName: "<%= chunkPlotName %>"
+  chunkPlotCaption: "<%= chunkPlotCaption %>"
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(magrittr)
+library(rcellminerUtilsCDB)
+library(rcellminer)
+library(ggplot2)
+library(reshape2)
+library(stringr)
+
+# PARAMETERS ----
+workDir <- "."
+
+pkgName <- "rcellminer"
+pkgVersion <- as.character(packageVersion(pkgName))
+
+# LOAD DATA ----
+#head(cellLineMatchTab)
+if(!exists("cellLineMatchTab")) {
+  cellLineMatchTab <- read.table("tmp_cellline_match.txt", sep="\t", header=TRUE, stringsAsFactors = FALSE)
+}
+
+if(!exists("srcContent")) {
+  srcContent <- readRDS(file.path(workDir, "srcContent.rds"))  
+}
+
+# Name Mapping 
+dbFullNames <- read.csv("cdb_names.csv")
+
+# Taken from: https://raw.githubusercontent.com/CBIIT/cellminercdb/master/www/files/help.md
+# Conversion: https://tableconvert.com/markdown-to-csv
+cdbAbbrev <- read.table("rcellminer_data_abbreviations.txt", sep="|", header=TRUE, stringsAsFactors=FALSE)
+
+#mainDataset <- "nci60"
+#curCellLine <- cellLineMatchTab$nci60[1]
+mainDataset <- params$mainDataset
+curCellLine <- params$curCellLine
+
+#curMolData <- srcContent[[mainDataset]]$molPharmData
+#names(curMolData)
+
+availableDatatypes <- lapply(srcContent, function(x) {
+  names(x$molPharmData)
+})
+
+allDatatypes <- sort(unique(unlist(availableDatatypes)))
+
+tmp <- cellLineMatchTab[which(cellLineMatchTab[[mainDataset]] == curCellLine), ]
+curSelectedData <- tmp[, colSums(is.na(tmp)) == 0]
+
+allDatabases <- colnames(cellLineMatchTab)
+selectedDatabases <- colnames(curSelectedData)
+aliases <- paste(unique(as.character(curSelectedData)), collapse=", ")
+
+curSelectedDatabase <- selectedDatabases[1]
+
+if(mainDataset == "cellosaurus_identifier") {
+  curCellLineTmp <- tmp[1, curSelectedDatabase]
+}
+
+curSampleData <- srcContent[[curSelectedDatabase]]$sampleData
+tissue <- curSampleData$OncoTree1[curSampleData$Name == curCellLineTmp] %>% 
+  gsub("_", " ", .) %>% 
+  str_to_title %>% 
+  gsub("Cns", "CNS", .)
+
+tmp <- matrix(0, ncol=length(allDatabases), nrow=length(allDatatypes))
+rownames(tmp) <- allDatatypes
+colnames(tmp) <- allDatabases
+
+for(i in 1:length(availableDatatypes)) {
+  #i <- 1
+  #cat("I: ", i, "\n")
+  
+  if(names(availableDatatypes)[i] %in% selectedDatabases) {
+    tmp[availableDatatypes[[i]], names(availableDatatypes)[i]] <- 1
+  }
+}
+
+t2 <- tmp[, colSums(tmp) > 0, drop=FALSE]
+
+tmpDat <- reshape2::melt(t2)
+tmpDat <- merge(tmpDat, cdbAbbrev, by.x="Var1", by.y="abbreviation", all.x=TRUE)
+tmpDat <- merge(tmpDat, dbFullNames, by.x="Var2", by.y="db", all.x=TRUE)
+heatmapDat <- tmpDat[complete.cases(tmpDat),]
+
+# Sort labels
+heatmapDat$data_type <- factor(heatmapDat$data_type, levels=cdbAbbrev$data_type)
+
+title <- paste0(curCellLine, ": Pharmacogenomics Datasets")
+
+p <- ggplot(heatmapDat) + 
+  geom_tile(aes(y=short_name, x=data_type, fill=value), col="white") + 
+  scale_fill_gradient(low="white", high="black", limits=c(0, 1)) +
+  labs(title=title) + 
+  #coord_flip() +
+  coord_equal() +
+  theme_minimal() +
+  theme(legend.position='none', 
+        axis.ticks.x = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.x = element_blank(), 
+        axis.title.y = element_blank(),
+        axis.text.x = element_text(angle = 45, hjust=1)) 
+```
+
+```{r, echo=FALSE, results='asis'}
+cat(paste0("# Cancer Cell Line: ", curCellLine, " # {.gpf-content .usa-prose .site-prose} \n"))
+```
+
+* Aliases: `r aliases`
+* Tissue: `r tissue`
+
+[CellMinerCDB](https://discover.nci.nih.gov/cellminercdb){target="_blank"} integrates cancer cell line pharmacogenomic data for cell lines including `r curCellLine` and allows interactive genomic and drug data exploration within and across databases for the purposes of testing genomic data reproducibility and drug response determinants.
+
+If you use content from this page or CellMinerCDB, please cite: [Luna A et al. 2021. PMID: 33196823](https://pubmed.ncbi.nlm.nih.gov/33196823/){target="_blank"}, [Rajapakse VN et al. 2018. PMID: 30553813](https://pubmed.ncbi.nlm.nih.gov/30553813/){target="_blank"}, and [Luna et al. 2016., PMID: 33196823](https://pubmed.ncbi.nlm.nih.gov/26635141/){target="_blank"}.
+
+```{r <%= chunkPlotName %>, fig.align='center', fig.width=7.5, fig.cap="<%= chunkPlotCaption %>"}
+p
+```
+
+## Available Data
+
+Visit [CellMinerCDB](https://discover.nci.nih.gov/cellminercdb){target="_blank"} to interactively explore available pharmacogenomics data for the `r tolower(tissue)` cancer cell line: `r curCellLine`.
+
+```{r, echo=FALSE, results='asis'}
+heatmapDat$short_name <- as.character(heatmapDat$short_name)
+heatmapDat$data_type <- as.character(heatmapDat$data_type)
+
+tmp_names <- unique(heatmapDat$short_name) %>% sort
+
+for(i in 1:length(tmp_names)) {
+  tmp_name <- tmp_names[i]
+  data_types <- heatmapDat$data_type[heatmapDat$short_name == tmp_name & heatmapDat$value == 1] %>% sort
+  
+  cat(paste0("### ", tmp_name, "\n"))
+  for(type in data_types) {
+    cat(paste0("* ", type, "\n"))
+  }
+  
+  cat("\n")
+}
+```
+
+## Technical Information
+
+This page was generated using the R package [rcellminer](https://www.bioconductor.org/packages/release/bioc/html/rcellminer.html){target="_blank"} `r pkgVersion`.

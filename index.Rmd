@@ -1,0 +1,21 @@
+---
+title: "CellMinerCDB: Cancer Cell Line Pharmacogenomics"
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
+```
+
+```{r}
+library(rcellminer)
+pkgName <- "rcellminer"
+pkgVersion <- as.character(packageVersion(pkgName))
+```
+
+# CellMinerCDB: Cancer Cell Line Pharmacogenomics Exploration # {.gpf-content .usa-prose .site-prose}
+
+CellMiner Cross-Database (CellMinerCDB, [https://discover.nci.nih.gov/cellminercdb](https://discover.nci.nih.gov/cellminercdb){target="_blank"}) allows integration and analysis of molecular and pharmacological data within and across cancer cell line datasets. If you use content from this site, please cite: [Luna A et al. 2021. PMID: 33196823](https://pubmed.ncbi.nlm.nih.gov/33196823/){target="_blank"}, [Rajapakse VN et al. 2018. PMID: 30553813](https://pubmed.ncbi.nlm.nih.gov/30553813/){target="_blank"}, and [Luna et al. 2016., PMID: 33196823](https://pubmed.ncbi.nlm.nih.gov/26635141/){target="_blank"}.
+
+
+
+
