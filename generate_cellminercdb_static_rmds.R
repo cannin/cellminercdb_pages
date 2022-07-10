@@ -9,7 +9,7 @@ library(rcellminerUtilsCDB)
 library(rcellminer)
 
 # PARAMETERS ----
-workDir <- "~/default/workspaceNotSynced/cellminercdb_templates_uswds"
+workDir <- "."
 
 # FUNCTIONS ----
 slugify <- function(x) {

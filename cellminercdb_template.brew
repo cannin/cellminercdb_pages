@@ -36,7 +36,8 @@ if(!exists("srcContent")) {
 }
 
 # Name Mapping 
-dbFullNames <- read.csv("cdb_names.csv")
+dbFullNames <- read.csv(system.file("extdata/cdb_names.csv", package="rcellminerUtilsCDB"))
+#dbFullNames <- read.csv("cdb_names.csv")
 
 # Taken from: https://raw.githubusercontent.com/CBIIT/cellminercdb/master/www/files/help.md
 # Conversion: https://tableconvert.com/markdown-to-csv
