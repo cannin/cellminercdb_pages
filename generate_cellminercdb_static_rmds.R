@@ -4,6 +4,7 @@ library(rmarkdown)
 library(magrittr)
 library(jsonlite)
 library(xml2)
+library(tools)
 
 library(rcellminerUtilsCDB)
 library(rcellminer)
@@ -82,16 +83,11 @@ rmarkdown::render_site(input=workDir)
 # CREATE SITEMAP ----
 output_dir <- "_static"
 base_url <- "https://discover.nci.nih.gov/cellminercdb/cell_lines/"
-file_list <- list.files(output_dir, "html")
-
-# CREATE SITEMAP ----
-output_dir <- "_static"
-base_url <- "https://discover.nci.nih.gov/cellminercdb/cell_lines/"
 file_list_html <- list.files(file.path(workDir, output_dir), "html")
 file_list_img <- list.files(file.path(workDir, output_dir), "png", recursive=TRUE)
 
 # Simple Sitemap (without images)
-#writeLines(paste0(base_url, file_list_html), file.path(workDir, output_dir, "sitemap.txt"))
+writeLines(paste0(base_url, file_list_html), file.path(workDir, output_dir, "sitemap.txt"))
 
 # Sitemap XML Format Description: https://www.sitemaps.org/protocol.html
 doc <- xml_new_root("urlset", 
@@ -100,7 +96,7 @@ doc <- xml_new_root("urlset",
 
 for(page in file_list_html) {
   # Get a string to match against the images
-  page_prefix <- file_path_sans_ext(page)
+  page_prefix <- tools::file_path_sans_ext(page)
   
   url <- doc %>% xml_add_child("url")
   
