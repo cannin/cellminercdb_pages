@@ -124,7 +124,7 @@ cat(paste0("# Cancer Cell Line: ", curCellLine, " # {.gpf-content .usa-prose .si
 * Aliases: `r aliases`
 * Tissue: `r tissue`
 
-[CellMinerCDB](https://discover.nci.nih.gov/cellminercdb){target="_blank"} integrates cancer cell line pharmacogenomic data for cell lines including `r curCellLine` and allows interactive genomic and drug data exploration within and across databases for the purposes of testing genomic data reproducibility and drug response determinants.
+`r curCellLine` is in [CellMinerCDB](https://discover.nci.nih.gov/cellminercdb){target="_blank"}, a searchable tool integrating cancer cell line pharmacogenomics data to link gene and drug activity signatures.
 
 [Click Here to Access CellMinerCDB](https://discover.nci.nih.gov/cellminercdb){target="_blank"}
 

@@ -83,7 +83,7 @@ rmarkdown::render_site(input=workDir)
 # CREATE SITEMAP ----
 output_dir <- "_static"
 base_url <- "https://discover.nci.nih.gov/cellminercdb/cell_lines/"
-file_list_html <- list.files(file.path(workDir, output_dir), "html")
+file_list_html <- list.files(file.path(workDir, output_dir), "_cellminercdb.html")
 file_list_img <- list.files(file.path(workDir, output_dir), "png", recursive=TRUE)
 
 # Simple Sitemap (without images)
