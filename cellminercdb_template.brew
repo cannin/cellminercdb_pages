@@ -80,12 +80,24 @@ tmp <- matrix(0, ncol=length(allDatabases), nrow=length(allDatatypes))
 rownames(tmp) <- allDatatypes
 colnames(tmp) <- allDatabases
 
+# availableDatatypes is a list with the names of the DBs
 for(i in 1:length(availableDatatypes)) {
   #i <- 1
   #cat("I: ", i, "\n")
   
   if(names(availableDatatypes)[i] %in% selectedDatabases) {
-    tmp[availableDatatypes[[i]], names(availableDatatypes)[i]] <- 1
+    for(j in 1:length(availableDatatypes[[i]])) {
+      #j <- 2
+      curDatatype <- availableDatatypes[[i]][j]
+
+      tmpDataset <- srcContent[[names(availableDatatypes)[i]]]
+      tmpMolPharmData <- tmpDataset$molPharmData[[curDatatype]]
+      
+      if(curCellLineTmp %in% colnames(tmpMolPharmData) && 
+         any(!is.na(tmpMolPharmData[, curCellLineTmp]))) {
+        tmp[availableDatatypes[[i]][j], names(availableDatatypes)[i]] <- 1        
+      }
+    }
   }
 }
 
