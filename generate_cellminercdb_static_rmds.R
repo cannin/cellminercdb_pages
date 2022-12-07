@@ -44,7 +44,7 @@ create.report <- function(reports, prepend=NULL) {
 # LOAD DATA ----
 data("cellLineMatchTab")
 
-srcContent <- readRDS(file.path(workDir, "srcContent.rds"))
+srcContent <- readRDS(file.path(workDir, "srcContent_20221024.rds"))
 # mainDataset <- "nci60"
 # cellLines <- cellLineMatchTab$nci60
 mainDataset <- "cellosaurus_identifier"

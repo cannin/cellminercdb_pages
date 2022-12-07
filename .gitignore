@@ -3,7 +3,12 @@
 .RData
 .Ruserdata
 cellminercdb_pages.Rproj
-srcContent.rds
 _static*
 cdb_static*.zip
 del.txt
+srcContent.rds
+*.rds
+*_cellminercdb.html
+*_cellminercdb.Rmd
+*1.png
+/site_libs
