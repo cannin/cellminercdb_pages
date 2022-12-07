@@ -582,7 +582,6 @@ https://discover.nci.nih.gov/cellminercdb/cell_lines/im95_cellminercdb.html
 https://discover.nci.nih.gov/cellminercdb/cell_lines/imr32_cellminercdb.html
 https://discover.nci.nih.gov/cellminercdb/cell_lines/imr5_cellminercdb.html
 https://discover.nci.nih.gov/cellminercdb/cell_lines/ina6_cellminercdb.html
-https://discover.nci.nih.gov/cellminercdb/cell_lines/index.html
 https://discover.nci.nih.gov/cellminercdb/cell_lines/iommlee_cellminercdb.html
 https://discover.nci.nih.gov/cellminercdb/cell_lines/iose364_cellminercdb.html
 https://discover.nci.nih.gov/cellminercdb/cell_lines/iose397_cellminercdb.html
