@@ -12,3 +12,5 @@ srcContent.rds
 *_cellminercdb.Rmd
 *1.png
 /site_libs
+*.knit.md
+index.html

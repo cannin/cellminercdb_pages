@@ -96,6 +96,9 @@ for(i in 1:length(availableDatatypes)) {
       tmpDataset <- srcContent[[names(availableDatatypes)[i]]]
       tmpMolPharmData <- tmpDataset$molPharmData[[curDatatype]]
       
+      curDatabaseTmp <- names(availableDatatypes)[i]
+      curCellLineTmp <- curSelectedData[[curDatabaseTmp]]
+      
       if(curCellLineTmp %in% colnames(tmpMolPharmData) && 
          any(!is.na(tmpMolPharmData[, curCellLineTmp]))) {
         tmp[availableDatatypes[[i]][j], names(availableDatatypes)[i]] <- 1        
