@@ -31,6 +31,8 @@ create.report <- function(reports, prepend=NULL) {
   chunkPlotCaption <- paste0("Cell Line ", curCellLine, " Available Pharmacogenomics Datasets")
   chunkPlotName <- tolower(gsub(" ", "_", chunkPlotCaption))
   
+  srcContentFile <- srcContentFile
+  
   filenamePrefix <- paste0(filePrefix, "_cellminercdb")
   htmlFile <- paste0(filenamePrefix, ".html")
   rmdFile <- file.path(workDir, paste0(filenamePrefix, ".Rmd"))
@@ -44,12 +46,13 @@ create.report <- function(reports, prepend=NULL) {
 # LOAD DATA ----
 data("cellLineMatchTab")
 
-srcContent <- readRDS(file.path(workDir, "srcContent_20221024.rds"))
+srcContentFile <- "srcContent_20221024.rds"
+srcContent <- readRDS(file.path(workDir, srcContentFile))
 # mainDataset <- "nci60"
 # cellLines <- cellLineMatchTab$nci60
 mainDataset <- "cellosaurus_identifier"
 #cellLineMatchTab <- read.table("tmp_cellline_match.txt", sep="\t", header=TRUE, stringsAsFactors = FALSE)
-restrictedDatasets <- c(names(srcContent), mainDataset) %>% unique
+restrictedDatasets <- c(names(srcContent), "cellosaurus_accession", mainDataset) %>% unique
 
 # Remove cell lines with no data in srcContent
 tmp <- cellLineMatchTab[, names(srcContent)]

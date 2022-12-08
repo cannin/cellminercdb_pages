@@ -5,6 +5,7 @@ params:
   mainDataset: "<%= mainDataset %>"
   chunkPlotName: "<%= chunkPlotName %>"
   chunkPlotCaption: "<%= chunkPlotCaption %>"
+  srcContentFile: "<%= srcContentFile %>"
 ---
 
 ```{r include=FALSE}
@@ -27,12 +28,9 @@ pkgVersion <- as.character(packageVersion(pkgName))
 
 # LOAD DATA ----
 #head(cellLineMatchTab)
-if(!exists("cellLineMatchTab")) {
-  cellLineMatchTab <- read.table("tmp_cellline_match.txt", sep="\t", header=TRUE, stringsAsFactors = FALSE)
-}
 
 if(!exists("srcContent")) {
-  srcContent <- readRDS(file.path(workDir, "srcContent.rds"))  
+  srcContent <- readRDS(file.path(workDir, params$srcContentFile))  
 }
 
 # Name Mapping 
@@ -68,7 +66,12 @@ curSelectedDatabase <- selectedDatabases[1]
 
 if(mainDataset == "cellosaurus_identifier") {
   curCellLineTmp <- tmp[1, curSelectedDatabase]
+  cellosaurusAccession <- tmp[1, "cellosaurus_accession"]
 }
+
+# DEBUG
+# cellosaurusAccession <- as.character(tmp$cellosaurus_accession)
+# cellosaurusAccession <- paste(colnames(cellLineMatchTab), collapse=", ")
 
 curSampleData <- srcContent[[curSelectedDatabase]]$sampleData
 tissue <- curSampleData$OncoTree1[curSampleData$Name == curCellLineTmp] %>% 
@@ -135,6 +138,11 @@ cat(paste0("# Cancer Cell Line: ", curCellLine, " # {.gpf-content .usa-prose .si
 
 * Aliases: `r aliases`
 * Tissue: `r tissue`
+```{r, echo=FALSE, results='asis'}
+if(mainDataset == "cellosaurus_identifier") {
+  cat(paste0('* Cellosaurus: [', cellosaurusAccession, '](https://www.cellosaurus.org/', cellosaurusAccession, '){target="_blank"}'))
+}
+```
 
 `r curCellLine` is in [CellMinerCDB](https://discover.nci.nih.gov/cellminercdb){target="_blank"}, a searchable tool integrating cancer cell line pharmacogenomics data to link gene and drug activity signatures.
 

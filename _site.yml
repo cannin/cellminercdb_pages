@@ -4,4 +4,4 @@ output:
   html_document:
     template: "_uswds_cdb_template.html"
 include: ["sitemap.txt", "assets"]
-exclude: ["*.txt", "*.tsv", "*.brew", "*.csv", "*.docx", "*.rds", "example_pages"]
+exclude: ["*.txt", "*.tsv", "*.brew", "*.csv", "*.docx", "*.rds", "example_pages", "cdb_static*"]
